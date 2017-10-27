@@ -1,29 +1,38 @@
+/*
+ * Parker Holt
+ * 10/27/2017
+ *
+ * This program takes a string and converts it to discord emojis.
+ */
 #include <iostream>
 #include <stdio.h>
-//#include <string.h>
+#include <Windows.h>
 #include <string>
-//#include <fstream>
+#include <sstream>
 using namespace std;
 
 void toClipboard(const string &s);
 
 int main(int argc, char *argv[]){
 	if(argc == 1) return -1;
-    string returnString = "";
-	//stream outfile("discordChat.txt");
+	bool noBadChars = true;
+	ostringstream os;
+	string returnStr = "";
 	for(int i = 1; i < argc; i++){
 		for(int j = 0; j < strlen(argv[i]); j++){
-            if(argv[i][j] > 96 && argv[i][j] < 122) ? (returnStr += ":regional_indicator_" + argv[i][j] + ": ") : (returnStr = "Bad char");
-            
-            //outfile << ":regional_indicator_" << argv[i][j] << ": " : break;//outfile << endl << endl << "BAD_CHAR_LOWERCASE_ONLY" << endl << endl;
+			if(argv[i][j] > 96 && argv[i][j] < 123){
+				os << ":regional_indicator_" << argv[i][j] << ": ";
+			} else {
+				os.str("");
+				os << "bad char at " << i << " " << j << endl;
+				noBadChars = false;
+				break;
+			}
 		}
-        returnStr += "   ";
-		//outfile << "   ";
+		if(!noBadChars) break;
+		os << "   ";
 	}
-	//outfile << endl;
-	//outfile.close();
-    toClipboard(returnStr);
-    cout << returnStr << endl;
+  toClipboard(os.str());
 	return 0;
 }
 
@@ -41,4 +50,3 @@ void toClipboard(const string &s){
     CloseClipboard();
     GlobalFree(hg);
 }
-
